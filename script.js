@@ -1,28 +1,12 @@
-const video = document.querySelector('.viewer');
+const video = document.querySelector('.player__video');
 const toggle = document.querySelector('.toggle');
 const progress = document.querySelector('.progress');
 const progressFilled = document.querySelector('.progress__filled');
-const volume = document.querySelector('input[name="volume"]');
-const playbackSpeed = document.querySelector('input[name="playbackRate"]');
-const skipButtons = document.querySelectorAll('[data-skip]');
+const volume = document.querySelector('.volume');
+const playbackSpeed = document.querySelector('.playbackSpeed');
 
-
-function togglePlay() {
-    if (video.paused) {
-        video.play();
-    } else {
-        video.pause();
-    }
-}
-
-toggle.addEventListener('click', togglePlay);
-
-video.addEventListener('play', () => {
-    toggle.textContent = '❚ ❚';
-});
-
-video.addEventListener('pause', () => {
-    toggle.textContent = '►';
+toggle.addEventListener('click', () => {
+    video.paused ? video.play() : video.pause();
 });
 
 volume.addEventListener('input', () => {
@@ -33,25 +17,17 @@ playbackSpeed.addEventListener('input', () => {
     video.playbackRate = playbackSpeed.value;
 });
 
-skipButtons.forEach(button => {
-    button.addEventListener('click', () => {
-        video.currentTime += Number(button.dataset.skip);
-    });
+document.querySelector('.rewind').addEventListener('click', () => {
+    video.currentTime -= 10;
 });
 
-function updateProgress() {
+document.querySelector('.forward').addEventListener('click', () => {
+    video.currentTime += 25;
+});
+
+video.addEventListener('timeupdate', () => {
     const percent =
         (video.currentTime / video.duration) * 100;
 
     progressFilled.style.width = `${percent}%`;
-}
-
-video.addEventListener('timeupdate', updateProgress);
-
-progress.addEventListener('click', (e) => {
-    const seekTime =
-        (e.offsetX / progress.offsetWidth) *
-        video.duration;
-
-    video.currentTime = seekTime;
 });
